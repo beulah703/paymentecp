@@ -1,0 +1,31 @@
+
+.filters {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	margin-bottom: 20px;
+}
+
+.filters label {
+	margin-right: 10px;
+}
+
+.filters select, .filters input[type="date"] {
+	padding: 5px;
+	border-radius: 5px;
+	border: 1px solid #ccc;
+}
+
+.filters button {
+	padding: 5px 10px;
+	border-radius: 5px;
+	background-color: #4CAF50;
+	color: white;
+	border: none;
+	cursor: pointer;
+}
+
+.profile-pic {
+	height: 100Px;
+	width: 200px;
+}
