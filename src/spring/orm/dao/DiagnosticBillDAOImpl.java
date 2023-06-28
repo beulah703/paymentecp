@@ -8,6 +8,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -29,34 +31,40 @@ public class DiagnosticBillDAOImpl implements DiagnosticBillDAO {
 	@PersistenceContext
 	private EntityManager em;
 
-	@Autowired
-	private PatientDAO pd;
+	private PatientDAO patientDAO;
 
 	@Autowired
-	private TestDAO td;
+	public DiagnosticBillDAOImpl(PatientDAO pd, TestDAO td) {
+		super();
+		this.patientDAO = pd;
+		this.testDAO = td;
+	}
 
+	private TestDAO testDAO;
+	private static final Logger logger = LoggerFactory.getLogger(DiagnosticBillDAOImpl.class);
 	TestBookStatus st = new TestBookStatus();
-	private Object d;
-	private Object p11;
 
 	List<Integer> testi = new ArrayList<>();
 	String con;
 	BookedTestIDs btid = new BookedTestIDs(testi, con);
 
 	public List<DiagnosticBillModel> getdbilldetails() {
+		logger.info("Query to fetch diagnostic bill details");
 		return em.createQuery("SELECT d FROM diagnosticBillModel d", DiagnosticBillModel.class).getResultList();
 	}
 
 	@Transactional
 	public void bookDcTest(BillInputModel bi) {
 
-		System.out.println("inside ne");
+		logger.info("Inside Book DC Test method");
 
 		int test = bi.getTest();
 		String type = bi.getType();
 
 		int patn_id = bi.getPatient();
-
+		logger.info("Booked Test id " + " " + test);
+		logger.info("Patient type " + " " + type);
+		logger.info("Patient Id " + " " + patn_id);
 		TestBookStatusComposite id = new TestBookStatusComposite();
 		id.setTbPatnId(patn_id);
 		id.setTestId(test);
@@ -67,12 +75,13 @@ public class DiagnosticBillDAOImpl implements DiagnosticBillDAO {
 		st.setStatus("pending");
 
 		em.persist(st);
+		logger.info("Saved/Persisted booked test to dataBase");
 
 	}
 
 	@Transactional
 	public List<Object> getTotalBills(int patient) {
-
+		logger.info("Total Bills Calculation for booked tests ");
 		List<Object> tests1 = new ArrayList<>();
 		List<Object> tests2 = new ArrayList<>();
 		int amt = 0;
@@ -83,7 +92,7 @@ public class DiagnosticBillDAOImpl implements DiagnosticBillDAO {
 			List<Integer> testh = (List<Integer>) em.createQuery(
 					"select t.id.test_id  from TestBookStatus t where t.id.tb_patn_id=:patn_id and t.status= 'pending'")
 					.setParameter("patn_id", patn_id).getResultList();
-			System.out.println("length here" + testh.size());
+			logger.info("Number of Booked Tests " + " " + testh.size());
 			for (int i = 0; i < testh.size(); i++) {
 				int j = (int) testh.get(i);
 
@@ -95,6 +104,7 @@ public class DiagnosticBillDAOImpl implements DiagnosticBillDAO {
 
 				int testsprice = (int) em.createQuery("select t.test_price from TestModel t where t.test_id=:j ")
 						.setParameter("j", j).getSingleResult();
+				logger.info("Booked Test Price " + " " + testsprice);
 
 				amt = amt + testsprice;
 				System.out.println(amt);
@@ -102,6 +112,7 @@ public class DiagnosticBillDAOImpl implements DiagnosticBillDAO {
 
 			}
 			tests2.add(amt);
+			logger.info("Total Amount for booked Tests " + " " + amt);
 			btid.setAmt(amt);
 
 		}
@@ -112,6 +123,7 @@ public class DiagnosticBillDAOImpl implements DiagnosticBillDAO {
 
 	@Transactional
 	public int storeToDatabase(int patient) {
+		logger.info("Storing Paid test details to Database");
 		int patn_id = patient;
 		int billid = 0;
 		String type = (String) em.createQuery("select t.type from TestBookStatus t  where t.id.tb_patn_id=:patn_id")
@@ -123,13 +135,12 @@ public class DiagnosticBillDAOImpl implements DiagnosticBillDAO {
 		if (patn_id >= 0) {
 
 			int price = btid.getAmt();
+			logger.info("Patient ID " + " " + (Integer) patn_id);
 
-			System.out.println((Integer) patn_id);
-			System.out.println(LocalDate.now());
-			System.out.println(price);
+			logger.info("Total Amount " + " " + price);
 
 			DiagnosticBillModel d1 = new DiagnosticBillModel((Integer) patn_id, LocalDate.now(), price, type);
-			System.out.println("in 2");
+			logger.info("Saving Paid Diagnostic Bill Details to Diagnostic Bills Table");
 			em.persist(d1);
 
 			for (int i = 0; i < t1.size(); i++) {
@@ -138,10 +149,10 @@ public class DiagnosticBillDAOImpl implements DiagnosticBillDAO {
 						.setParameter("j", t1.get(i)).getSingleResult();
 				DiagnosticBillModelId id = new DiagnosticBillModelId((Integer) d1.getDgbl_id(), t1.get(i));
 				billid = ((Integer) d1.getDgbl_id());
-				System.out.println(t1.get(i));
+				logger.info("Bill Id generated is" + " " + billid);
 
 				Diagnostictestbill d2 = new Diagnostictestbill(id, price2);
-
+				logger.info("Saving Diagnostic Paid Test Bill Details to Diagnostic Test Bills Table");
 				em.persist(d2);
 
 				TestBookStatusComposite comid = new TestBookStatusComposite();
@@ -161,12 +172,14 @@ public class DiagnosticBillDAOImpl implements DiagnosticBillDAO {
 			}
 
 		}
+		logger.info("Generated Bill ID is  " + " " + billid);
 		return billid;
 
 	}
 
 	@Override
 	public List<OutputPatientTestReports> gettestdate(String date1, String date2, int pid) {
+
 		// TODO Auto-generated method stub
 		String hql = "SELECT new spring.orm.model.output.OutputPatientTestReports(pdr.compositeKey.dgbl_id, dbm.dgbl_date, pdr.dgdr_path)"
 				+ " FROM PatientDiagnonisticReports pdr"

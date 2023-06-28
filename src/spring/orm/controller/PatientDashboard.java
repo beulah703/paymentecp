@@ -2,6 +2,8 @@ package spring.orm.controller;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,10 +26,12 @@ public class PatientDashboard {
 
 	@Autowired
 	private PatientServices patientservice;
+	private static final Logger logger = LoggerFactory.getLogger(PatientDashboard.class);
 
 	// Display all the appointments and test details
 	@RequestMapping(value = "/getapptests", method = RequestMethod.GET)
 	public ResponseEntity<String> getTests(@SessionAttribute("patientSession") PatientSession patientSession) {
+		logger.info("Method to display tests in dashboard is called");
 		// Extract the patient ID from the session attribute
 		int patientId = patientSession.getId();
 
@@ -42,6 +46,7 @@ public class PatientDashboard {
 	@RequestMapping(value = "/getapps", method = RequestMethod.GET)
 	public ResponseEntity<String> getAppointmentsDetails(
 			@SessionAttribute("patientSession") PatientSession patientSession) {
+		logger.info("Method to display appointments in dashboard is called");
 		// Extract the patient ID from the session attribute
 		int patientId = patientSession.getId();
 
@@ -54,7 +59,9 @@ public class PatientDashboard {
 
 	// Get all Parameters data for respective patient
 	@RequestMapping(value = "/getOutParaGroup", method = RequestMethod.GET)
-	public ResponseEntity<String> getParameterValues(@SessionAttribute("patientSession") PatientSession patientSession) {
+	public ResponseEntity<String> getParameterValues(
+			@SessionAttribute("patientSession") PatientSession patientSession) {
+		logger.info("Method to display parameter values for chart in dashboard is called");
 		// Extract the patient ID from the session attribute
 		int patientId = patientSession.getId();
 
@@ -68,6 +75,8 @@ public class PatientDashboard {
 	@RequestMapping(value = "/getPrescriptionView", method = RequestMethod.GET)
 	public @ResponseBody List<PatientlastvisitOutput> getPrescriptionLastVisit(
 			@SessionAttribute("patientSession") PatientSession patientSession) {
+
+		logger.info("Method to display patient Last Visit details in dashboard is called");
 		// Extract the patient ID from the session attribute
 		int patientId = patientSession.getId();
 
@@ -81,6 +90,7 @@ public class PatientDashboard {
 	@RequestMapping(value = "/getapptestcards", method = RequestMethod.GET)
 	public @ResponseBody List<Object> getAppointmentTestsCount(
 			@SessionAttribute("patientSession") PatientSession patientSession) {
+		logger.info("Method to display appointments and tests counts  in dashboard is called");
 		// Extract the patient ID from the session attribute
 		int patientId = patientSession.getId();
 

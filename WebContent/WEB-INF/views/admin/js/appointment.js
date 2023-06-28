@@ -297,8 +297,17 @@
 							}
 						},
 						error : function(xhr, status, error) {
-							// Handle the error response here
-							console.log(xhr.responseText);
+								// Handle the error response here
+			console.log(xhr.responseText);
+			var paymentError = '<h3><strong> Payment Error </strong></h3>';
+			
+		
+			
+			paymentError += '<p>Payment Failed : ' + xhr.responseText + '</p>'
+			
+
+			$('#bookingDetails4').html(paymentError);
+			$('#previewModal4').modal('show');
 						}
 					});
 		}

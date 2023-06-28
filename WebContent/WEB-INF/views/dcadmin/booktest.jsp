@@ -176,6 +176,26 @@
 						</div>
 					</div>
 				</div>
+				
+					<div class="modal fade" id="previewModal4" tabindex="-1"
+					role="dialog" aria-labelledby="previewModalLabel"
+					aria-hidden="true">
+					<div class="modal-dialog" role="document">
+						<div class="modal-content">
+							<div class="modal-header">
+								<h5 class="modal-title" id="previewModalLabel">Payment Failed</h5>
+								<button type="button" class="close" data-dismiss="modal"
+									aria-label="Close">
+									<span aria-hidden="true">&times;</span>
+								</button>
+							</div>
+							<div class="modal-body" id="bookingDetails4">
+								<!-- Dynamically populated with booking details -->
+							</div>
+							
+						</div>
+					</div>
+				</div>
 
 				<div class="modal fade" id="previewModal1" tabindex="-1"
 					role="dialog" aria-labelledby="previewModalLabel"

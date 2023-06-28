@@ -2,6 +2,8 @@ package spring.orm.services;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +15,7 @@ import spring.orm.model.output.PatientlastvisitOutput;
 public class PatientServices {
 	@Autowired
 	PatientDAO patientDAO;
+	private static final Logger logger = LoggerFactory.getLogger(PatientServices.class);
 
 	/**
 	 * Retrieves the appointment tests for the specified patient.
@@ -22,6 +25,7 @@ public class PatientServices {
 	 */
 	public List<Object> getTestsDetails(int p) {
 		// TODO: Implement the logic to retrieve appointment tests
+		logger.info("Services Method to display tests in dashboard is called");
 		return patientDAO.getPatientTestsById(p);
 	}
 
@@ -33,6 +37,7 @@ public class PatientServices {
 	 */
 	public List<Object> getAppointmentsDetails(int p) {
 		// TODO: Implement the logic to retrieve appointments using the patient ID
+		logger.info("Services Method to display appointments in dashboard is called");
 		return patientDAO.getAppointmentsById(p);
 	}
 
@@ -44,6 +49,7 @@ public class PatientServices {
 	 */
 	public List<ParaGroupOutput> getParamterValues(int p) {
 		// TODO: Implement the logic to retrieve parameter groups with their parameters
+		logger.info("Services Method to display parameter values for chart in dashboard is called");
 		return patientDAO.getParameterValues();
 	}
 
@@ -55,6 +61,7 @@ public class PatientServices {
 	 */
 	public List<PatientlastvisitOutput> getPatientLastVisit(int p) {
 		// TODO: Implement the logic to retrieve last visit information using the patient ID
+		logger.info("Services Method to display patient Last Visit details in dashboard is called");
 		return patientDAO.getLastAppointmentInfoById(p);
 	}
 
@@ -66,6 +73,7 @@ public class PatientServices {
 	 */
 	public List<Object> getAppointmentTestCounts(int p) {
 		// TODO: Implement the logic to retrieve appointment test cards using the patient ID
+		logger.info("Services Method to display appointments and tests counts  in dashboard is called");
 		return patientDAO.getAppointmentTestsCount(p);
 	}
 }

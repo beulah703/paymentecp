@@ -1,6 +1,11 @@
 package spring.orm.model.output;
 
 public class patientsoutputmodel {
+	@Override
+	public String toString() {
+		return "patientsoutputmodel [patn_d=" + patn_d + ", patn_name=" + patn_name + "]";
+	}
+
 	int patn_d;
 	String patn_name;
 

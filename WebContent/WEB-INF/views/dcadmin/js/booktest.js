@@ -260,10 +260,11 @@ function payment() {
 		},
 
 		success: function(response) {
+		console.log(response);
 			console.log("in pay");
 			if (response.status == 'created') {
 				var options = {
-					"key": "rzp_test_wTvwL5iaSRljth",
+					"key": "rzp_test_wTvwL7iaSRljth",
 					"amount": response.amount,
 					"currency": "INR",
 					"name": "RaphaHospital",
@@ -316,6 +317,15 @@ function payment() {
 		error: function(xhr, status, error) {
 			// Handle the error response here
 			console.log(xhr.responseText);
+			var paymentError = '<h3><strong> Payment Error </strong></h3>';
+			
+		
+			
+			paymentError += '<p>Payment Failed : ' + xhr.responseText + '</p>'
+			
+
+			$('#bookingDetails4').html(paymentError);
+			$('#previewModal4').modal('show');
 		}
 	});
 

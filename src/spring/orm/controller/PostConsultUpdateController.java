@@ -3,22 +3,16 @@ package spring.orm.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.SessionAttribute;
 
-import com.google.gson.Gson;
-
 import spring.orm.contract.PatientDAO;
 import spring.orm.contract.PatientProfileUpdateDAO;
 import spring.orm.model.PatientSession;
-import spring.orm.model.entity.PatientMedicalProfile;
 import spring.orm.model.output.PrescriptionOutputmodel;
-import spring.orm.model.output.patientPrescriptionOutputmodel;
 
 @Controller
 public class PostConsultUpdateController {
@@ -34,22 +28,23 @@ public class PostConsultUpdateController {
 		this.profileUpdateDAO = profileUpdateDAO;
 	}
 
-	@RequestMapping(value = "patient/getParaGroup", method = RequestMethod.GET)
-	public ResponseEntity<String> getPatientPrescription(
-			@SessionAttribute("patientSession") PatientSession patientSession) {
-		int p = patientSession.getId();
-		List<PatientMedicalProfile> patientProfile = patientDAO.getPatientMedicalProfileById(p);
-		return ResponseEntity.status(HttpStatus.OK).body(new Gson().toJson(patientProfile));
-		// return "patient/myprofile";
-	}
+	// @RequestMapping(value = "patient/getParaGroup", method = RequestMethod.GET)
+	// public ResponseEntity<String> getPatientPrescription(
+	// @SessionAttribute("patientSession") PatientSession patientSession) {
+	// int p = patientSession.getId();
+	// List<PatientMedicalProfile> patientProfile = patientDAO.getPatientMedicalProfileById(p);
+	// return ResponseEntity.status(HttpStatus.OK).body(new Gson().toJson(patientProfile));
+	// // return "patient/myprofile";
+	// }
 
-	@RequestMapping(value = "patient/getPrescription", method = RequestMethod.GET)
-	public ResponseEntity<String> getPrescription(@SessionAttribute("patientSession") PatientSession patientSession) {
-		int p = patientSession.getId();
-		List<patientPrescriptionOutputmodel> lo = patientDAO.getPatientPrescriptionById(p);
-		return ResponseEntity.status(HttpStatus.OK).body(new Gson().toJson(lo));
-		// return "patient/myprofile";
-	}
+	// @RequestMapping(value = "patient/getPrescription", method = RequestMethod.GET)
+	// public ResponseEntity<String> getPrescription(@SessionAttribute("patientSession") PatientSession patientSession)
+	// {
+	// int p = patientSession.getId();
+	// List<patientPrescriptionOutputmodel> lo = patientDAO.getPatientPrescriptionById(p);
+	// return ResponseEntity.status(HttpStatus.OK).body(new Gson().toJson(lo));
+	// // return "patient/myprofile";
+	// }
 
 	@RequestMapping(value = "patient/getallPrescription", method = RequestMethod.GET)
 	public String getAllPrescription(Model model, @SessionAttribute("patientSession") PatientSession patientSession) {

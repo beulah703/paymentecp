@@ -6,6 +6,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -43,6 +45,7 @@ public class TestBookBillGenController {
 	private HttpSession httpSession;
 
 	private PatientDAO patientDAO;
+	private static final Logger logger = LoggerFactory.getLogger(TestBookBillGenController.class);
 
 	@Autowired
 	public TestBookBillGenController(TestServices testService, DiagnosticBillDAO daignosticBillDAO, TestDAO testDAO,
@@ -57,26 +60,28 @@ public class TestBookBillGenController {
 
 	@RequestMapping("/dcadmin/booktest")
 	public String GetCat(Model model) {
+
+		logger.info("Entered Test Booking page");
 		return "dcadmin/booktest";
 	}
 
 	@GetMapping("/dcadmin/gettestcat")
 	public @ResponseBody ResponseEntity<String> GetCategories(Model model) {
 
+		logger.info("Method to load Categories is Called ");
 		List<testsCategoriesModel> lc = testDAO.getCategories();
 
-		System.out.println("*********************" + lc);
-
+		logger.info("List Of Categories" + " " + lc.toString());
 		return ResponseEntity.status(HttpStatus.OK).body(new Gson().toJson(lc));
 
 	}
 
 	@GetMapping("/dcadmin/getpatients")
 	public @ResponseBody ResponseEntity<String> getPatients(Model model) {
-
+		logger.info("Method to load Patients is Called ");
 		List<patientsoutputmodel> lc = testDAO.getPatients();
 
-		System.out.println("*********************" + lc);
+		logger.info("List Of Patients" + " " + lc.toString());
 
 		return ResponseEntity.status(HttpStatus.OK).body(new Gson().toJson(lc));
 
@@ -85,9 +90,9 @@ public class TestBookBillGenController {
 
 	@RequestMapping(value = "/dcadmin/gettestbycat", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<String> getTestByCategory(@RequestParam String cat, Model model) {
-
+		logger.info("Method to load Tests of selected Category is Called ");
 		List<TestModel> test = testDAO.getTestByCategory(cat);
-
+		logger.info("List Of Patients" + " " + test);
 		return ResponseEntity.status(HttpStatus.OK).body(new Gson().toJson(test));
 
 	}
@@ -95,17 +100,18 @@ public class TestBookBillGenController {
 	// This method is responsible for booking a test and storing the information provided in the BillInputModel object
 	// to database.
 	@RequestMapping(value = "/dcadmin/bookdctest", method = RequestMethod.POST)
-	public void BookTest(Model model, @ModelAttribute BillInputModel bi) {
-
-		daignosticBillDAO.bookDcTest(bi);
+	public void BookTest(Model model, @ModelAttribute BillInputModel billInput) {
+		logger.info("Method to book Test is Called ");
+		daignosticBillDAO.bookDcTest(billInput);
 
 	}
 
 	@RequestMapping(value = "/dcadmin/gettestprice", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<String> getTestPrice(@RequestParam int test, Model model) {
-		System.out.println("inside  price testcat");
+		logger.info("Method to get test Price of Selected test is Called ");
+		logger.info("Selected Test ID" + " " + test);
 		Object price = testDAO.getSelectedTestPrice(test);
-
+		logger.info("selected test Price" + " " + (int) price);
 		return ResponseEntity.status(HttpStatus.OK).body(new Gson().toJson(price));
 
 	}
@@ -115,9 +121,9 @@ public class TestBookBillGenController {
 
 	@RequestMapping(value = "/dcadmin/storedb", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<String> storeToDatabase(Model model, @RequestParam int patient) {
-		System.out.println("inside  price testcat");
+		logger.info("Method to store booked tests to database is Called ");
 		int billid = daignosticBillDAO.storeToDatabase(patient);
-
+		logger.info("Generated Bill Id for booked tests " + " " + billid);
 		return ResponseEntity.status(HttpStatus.OK).body(new Gson().toJson(billid));
 	}
 
@@ -126,9 +132,9 @@ public class TestBookBillGenController {
 
 	@RequestMapping(value = "/dcadmin/totalbills", method = RequestMethod.GET)
 	public ResponseEntity<String> totalBills(@RequestParam int patient, Model model) {
-		System.out.println("in book");
+		logger.info("Method to calculate total bill is Called ");
 		List<Object> lb = daignosticBillDAO.getTotalBills(patient);
-
+		// logger.info("Total tests and total Bill is " + " " + lb);
 		return ResponseEntity.status(HttpStatus.OK).body(new Gson().toJson(lb));
 
 	}
@@ -137,9 +143,10 @@ public class TestBookBillGenController {
 	@RequestMapping(value = "/dcadmin/mailsend2", method = RequestMethod.POST)
 	public @ResponseBody void mailSend(HttpServletRequest request, HttpServletResponse response,
 			@RequestParam String email, @RequestParam String content) {
-
+		logger.info("Method to send Mail is Called ");
 		try {
 			MailSend.sendEmailTestBooking(request, response, email, content);
+			logger.info("No Exception Raised to send mail ");
 		} catch (Exception e) {
 			// Catches any exception that occurs during the email sending process and prints the stack trace.
 			// MessagingException

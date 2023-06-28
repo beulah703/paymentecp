@@ -1,6 +1,11 @@
 package spring.orm.model.output;
 
 public class testsCategoriesModel {
+	@Override
+	public String toString() {
+		return "testsCategoriesModel [test_category=" + test_category + "]";
+	}
+
 	String test_category;
 
 	public String getTest_category() {
