@@ -47,12 +47,18 @@ public class DiagnosticBillDAOImpl implements DiagnosticBillDAO {
 	List<Integer> testi = new ArrayList<>();
 	String con;
 	BookedTestIDs btid = new BookedTestIDs(testi, con);
-
-	public List<DiagnosticBillModel> getdbilldetails() {
+/**
+     * Retrieves the diagnostic bill details.
+     * @return The list of diagnostic bill models.
+     */
+	public List<DiagnosticBillModel> getDbillDetails() {
 		logger.info("Query to fetch diagnostic bill details");
 		return em.createQuery("SELECT d FROM diagnosticBillModel d", DiagnosticBillModel.class).getResultList();
 	}
-
+/**
+     * Books a diagnostic test for a patient.
+     * @param bi The BillInputModel containing the test, type, and patient information.
+     */
 	@Transactional
 	public void bookDcTest(BillInputModel bi) {
 
@@ -78,7 +84,11 @@ public class DiagnosticBillDAOImpl implements DiagnosticBillDAO {
 		logger.info("Saved/Persisted booked test to dataBase");
 
 	}
-
+ /**
+     * Retrieves the total bills for a patient
+     * @param patient The ID of the patient.
+     * @return The list of booked test details and the total amount.
+     */
 	@Transactional
 	public List<Object> getTotalBills(int patient) {
 		logger.info("Total Bills Calculation for booked tests ");
@@ -120,7 +130,12 @@ public class DiagnosticBillDAOImpl implements DiagnosticBillDAO {
 		return tests2;
 
 	}
-
+/**
+     * Stores the paid test details to the database.
+     *
+     * @param patient The ID of the patient.
+     * @return The generated bill ID.
+     */
 	@Transactional
 	public int storeToDatabase(int patient) {
 		logger.info("Storing Paid test details to Database");
@@ -176,7 +191,14 @@ public class DiagnosticBillDAOImpl implements DiagnosticBillDAO {
 		return billid;
 
 	}
-
+ /**
+     * Retrieves the test reports for a patient within a specific date range.
+     *
+     * @param date1 The start date of the range.
+     * @param date2 The end date of the range.
+     * @param pid   The ID of the patient.
+     * @return The list of patient test reports.
+     */
 	@Override
 	public List<OutputPatientTestReports> gettestdate(String date1, String date2, int pid) {
 
