@@ -56,21 +56,7 @@ $(document).ready(function() {
 			console.log("Error: " + error);
 		}
 	});
-	/* const set = new Set(list);
-	const uniqueList = Array.from(set);
-	for (var i = 0; i < uniqueList.length; i++) {
-		var option = document.createElement("option");
-		option.value = uniqueList[i];
-		option.text = uniqueList[i];
-		categorySelect.appendChild(option);
-	}
-	for (var i = 0; i < patients.length; i++) {
-		  var option = document.createElement("option");
-		  option.value = patients[i].patn_id;
-		  option.text =  patients[i].patn_id+" "+patients[i].patn_name;
-		  patientSelect.appendChild(option);
-	    
-	  } */
+	
 });
 
 function getTest() {
@@ -79,7 +65,7 @@ function getTest() {
 	$.ajax({
 		url: "./gettestbycat",
 		type: "POST",
-		data: { cat: category },
+		data: { category: category },
 		success: function(response) {
 
 			loadTests(response);
