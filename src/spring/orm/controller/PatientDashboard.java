@@ -71,7 +71,8 @@ public class PatientDashboard {
 		// Return the response with the parameter groups in JSON format
 		return ResponseEntity.status(HttpStatus.OK).body(new Gson().toJson(paraGroups));
 	}
-
+	
+//Method to get Patient Last Appointment Details
 	@RequestMapping(value = "/getPrescriptionView", method = RequestMethod.GET)
 	public @ResponseBody List<PatientlastvisitOutput> getPrescriptionLastVisit(
 			@SessionAttribute("patientSession") PatientSession patientSession) {
@@ -86,7 +87,8 @@ public class PatientDashboard {
 		// Return the last visit information
 		return lastVisits;
 	}
-
+	
+//Method to count the number of patients booked appointments and tests
 	@RequestMapping(value = "/getapptestcards", method = RequestMethod.GET)
 	public @ResponseBody List<Object> getAppointmentTestsCount(
 			@SessionAttribute("patientSession") PatientSession patientSession) {
