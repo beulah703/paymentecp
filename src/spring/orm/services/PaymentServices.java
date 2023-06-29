@@ -13,6 +13,9 @@ import org.springframework.ui.Model;
 import com.razorpay.Order;
 import com.razorpay.RazorpayClient;
 import com.razorpay.RazorpayException;
+import com.razorpay.Refund;
+
+import spring.orm.model.input.AppointmentForm;
 
 @Service
 public class PaymentServices {
@@ -29,7 +32,7 @@ public class PaymentServices {
 			throws RazorpayException, JSONException {
 		logger.info("Inside Services make Test Payment Method");
 		logger.info("billid" + " " + billid + " " + "amount" + " " + amount + " " + "currency" + " " + currency);
-		RazorpayClient razorpayClient = new RazorpayClient("rzp_test_wTvwL7iaSRljth", "AvneRMjZuce3P1NzgAM18omy");
+		RazorpayClient razorpayClient = new RazorpayClient("rzp_test_wTvwL5iaSRljth", "AvneRMjZuce3P1NzgAM18omy");
 		JSONObject options = new JSONObject();
 		int amt = Integer.parseInt(amount) * 100;
 		options.put("amount", amt); // Amount in paise (e.g., 1000 paise = Rs 10)
@@ -47,7 +50,7 @@ public class PaymentServices {
 			throws RazorpayException, JSONException {
 		logger.info("Inside Services make Appointment Payment Method");
 		logger.info("amount" + " " + amount + " " + "currency" + " " + currency);
-		RazorpayClient razorpayClient = new RazorpayClient("rzp_test_wTvwL7iaSRljth", "AvneRMjZuce3P1NzgAM18omy");
+		RazorpayClient razorpayClient = new RazorpayClient("rzp_test_wTvwL5iaSRljth", "AvneRMjZuce3P1NzgAM18omy");
 		JSONObject options = new JSONObject();
 		int amt = Integer.parseInt(amount) * 100;
 		options.put("amount", amt); // Amount in paise (e.g., 1000 paise = Rs 10)
@@ -58,4 +61,31 @@ public class PaymentServices {
 
 		return order.toString();
 	}
+
+	public String makeRefund(AppointmentForm appointment) throws RazorpayException, JSONException {
+		logger.info("Inside Make Refund Method");
+
+		// Initialize Razorpay client
+		RazorpayClient razorpay = new RazorpayClient("rzp_test_wTvwL5iaSRljth", "AvneRMjZuce3P1NzgAM18omy");
+
+		// Create refund request
+		JSONObject refundRequest = new JSONObject();
+		refundRequest.put("payment_id", appointment.getAppnrefer());// Payment ID to be refunded
+		refundRequest.put("speed", "optimum"); // Speed of refund: instant, immediate, or optimum
+		refundRequest.put("amount", appointment.getAppnfee()); // Refund amount, can be
+																// partial or
+		// full
+		String paymentId = appointment.getAppnrefer();
+		// Perform refund
+		Refund refund = razorpay.Refunds.create(refundRequest);
+
+		logger.info("Refund ID: " + refund.get("id"));
+		logger.info("Refund Status: " + refund.get("status"));
+		logger.info("Refund Amount: " + refund.get("amount"));
+		// Add more log statements or return the refund details as needed
+
+		return refund.toString(); // Return refund details as a string (you can customize the format)
+
+	}
+
 }

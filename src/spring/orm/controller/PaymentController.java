@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.razorpay.RazorpayException;
 
 import spring.orm.contract.SpecializationDAO;
+import spring.orm.model.input.AppointmentForm;
 import spring.orm.services.PaymentServices;
 
 @Controller
@@ -35,6 +36,10 @@ public class PaymentController {
 		this.specializationDAO = specializationDAO;
 		this.httpSession = httpSession;
 		this.paymentServices = paymentServices;
+	}
+
+	public PaymentController() {
+		// TODO Auto-generated constructor stub
 	}
 
 	@RequestMapping(value = "/dcadmin/testpayment", method = RequestMethod.POST, produces = "application/json")
@@ -56,6 +61,24 @@ public class PaymentController {
 		}
 	}
 
+	public String payRefund(AppointmentForm s) {
+
+		logger.info("Inside Payment Refund Method");
+		String refund = null;
+		try {
+			refund = paymentServices.makeRefund(s);
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (RazorpayException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		logger.info("Payment Refund Details are: " + refund);
+		return refund;
+
+	}
+
 	@RequestMapping(value = { "admin/appnpayment", "admin/appnpayment",
 			"patient/appnpayment" }, method = RequestMethod.POST, produces = "application/json")
 	@ResponseBody
@@ -75,5 +98,4 @@ public class PaymentController {
 					.body("Error occurred while processing payment");
 		}
 	}
-
 }

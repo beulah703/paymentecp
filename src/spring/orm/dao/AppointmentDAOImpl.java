@@ -22,6 +22,7 @@ import org.springframework.stereotype.Component;
 import spring.orm.contract.AppointmentDAO;
 import spring.orm.contract.DoctorsDAO;
 import spring.orm.contract.PatientDAO;
+import spring.orm.customexceptions.SlotAlreadyBookedException;
 import spring.orm.model.PatientModel;
 import spring.orm.model.entity.AppointmentEntity;
 import spring.orm.model.entity.DoctorTemp;
@@ -165,7 +166,7 @@ public class AppointmentDAOImpl implements AppointmentDAO {
 	@Override
 	@Transactional
 	public int bookAppointment(PatientModel existingPatientid, DoctorTemp doctor, String bookedDate, String payref,
-			double payamount) {
+			double payamount) throws SlotAlreadyBookedException {
 		/*
 		 * This method is used to book an appointment and takes the necessary parameters.
 		 */
@@ -191,10 +192,8 @@ public class AppointmentDAOImpl implements AppointmentDAO {
 		appointment.setAppn_payreference(payref); // Set the payment reference for the appointment.
 
 		appointment.setAppn_status("YETO"); // Set the status of the appointment to "YETO" (indicating it is not yet
-		// confirmed).
 
-		entityManager.persist(appointment); // Persist the appointment entity to the database.
-
+		entityManager.persist(appointment);
 		return appointment.getAppn_id(); // Return the appointment ID.
 	}
 
@@ -230,7 +229,8 @@ public class AppointmentDAOImpl implements AppointmentDAO {
 		/*
 		 * This method is used to reschedule an appointment based on the provided RescheduleAppointmentModel object.
 		 */
-		AppointmentEntity appointment = entityManager.find(AppointmentEntity.class, rescheduleAppointmentmodel.getAppointmentId());
+		AppointmentEntity appointment = entityManager.find(AppointmentEntity.class,
+				rescheduleAppointmentmodel.getAppointmentId());
 		/*
 		 * Retrieve the appointment entity from the EntityManager based on the appointment ID provided in the
 		 * RescheduleAppointmentModel object.
@@ -245,7 +245,8 @@ public class AppointmentDAOImpl implements AppointmentDAO {
 		 * purposes.
 		 */
 		appointment.setAppn_sch_date(Timestamp.valueOf(rescheduleAppointmentmodel.getRescheduleDate() + " "
-				+ LocalTime.parse(rescheduleAppointmentmodel.getSlot(), DateTimeFormatter.ofPattern("hh:mm a")).format(sqlFormat)));
+				+ LocalTime.parse(rescheduleAppointmentmodel.getSlot(), DateTimeFormatter.ofPattern("hh:mm a"))
+						.format(sqlFormat)));
 		/*
 		 * Set the rescheduled appointment date by combining the reschedule date from the RescheduleAppointmentModel
 		 * object with the parsed time from the slot using the provided time format.
@@ -257,7 +258,8 @@ public class AppointmentDAOImpl implements AppointmentDAO {
 
 	@Override
 	@Transactional
-	public List<OutputBookedAppointmnets> fetchBookedAppointmentData(BookedAppForm bookedAppointmentFilter, Integer patient_id) {
+	public List<OutputBookedAppointmnets> fetchBookedAppointmentData(BookedAppForm bookedAppointmentFilter,
+			Integer patient_id) {
 
 		String hql = "SELECT new spring.orm.model.output.OutputBookedAppointmnets(a.appn_id, p.patn_name, d.doctName, a.appn_sch_date, s.title, a.appn_status)"
 				+ "FROM AppointmentEntity a" + " JOIN a.pm p " + " JOIN a.doctor d"

@@ -264,7 +264,7 @@ function payment() {
 			console.log("in pay");
 			if (response.status == 'created') {
 				var options = {
-					"key": "rzp_test_wTvwL7iaSRljth",
+					"key": "rzp_test_wTvwL5iaSRljth",
 					"amount": response.amount,
 					"currency": "INR",
 					"name": "RaphaHospital",
@@ -278,6 +278,7 @@ function payment() {
 						console.log(response.razorpay_order_id);
 						console.log(response.razorpay_signature);
 						storedb(payment_id);
+						
 						alert("success");
 					},
 					"prefill": {
@@ -326,11 +327,35 @@ function payment() {
 
 			$('#bookingDetails4').html(paymentError);
 			$('#previewModal4').modal('show');
+			
+			
 		}
 	});
 
 
 
+}
+function refundPay(payment_id) {
+	
+console.log("inside refund payment");
+	$.ajax({
+		url: "./refundpayment",
+		type: "POST",
+		data: {
+			payreference: payment_id,
+
+		},
+		success: function(response) {
+		console.log("inside refund success");
+			console.log(response);
+			
+
+		},
+		error: function(xhr, status, error) {
+			// Handle the error response here
+			console.log(xhr.responseText);
+		}
+	});
 }
 function storedb(payment_id) {
 	var contact = document.getElementById("contact").value;

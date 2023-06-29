@@ -329,8 +329,24 @@
 						window.location.reload();
 					},
 					error : function(xhr, status, error) {
-						// Handle error response from the server
-						console.log(error);
+					console.log("refund");
+							console.log(xhr.responseText);
+							
+			var refundAmount = '<h3><strong> Amount Refunded </strong></h3>';
+			
+	
+var trimmedString = xhr.responseText.trim().substr(29,12);
+		
+			//xhr.responseText.trim();
+				refundAmount += '<p>Slot is already Booked  ' +""+ '</p>'
+			
+			refundAmount += '<p>Refund : ' + trimmedString + '</p>'
+			$('#previewModal').modal('hide');
+
+			$('#bookingDetails5').html(refundAmount);
+			$('#previewModal5').modal('show');
+				
+						
 					}
 				});
 			});

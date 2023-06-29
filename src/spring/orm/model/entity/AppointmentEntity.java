@@ -32,7 +32,8 @@ public class AppointmentEntity {
 	private PatientModel pm;
 	@Column(name = "appn_booked_Date")
 	private Timestamp appn_booked_Date;
-	@Column(name = "appn_sch_Date")
+	@Column(name = "appn_sch_Date", unique = true)
+
 	private Timestamp appn_sch_date;
 	@Column(name = "appn_paymode")
 	private String appn_paymode;
@@ -64,8 +65,6 @@ public class AppointmentEntity {
 	public void setDoctor(DoctorTemp doctor) {
 		this.doctor = doctor;
 	}
-
-
 
 	public PatientModel getPm() {
 		return pm;
@@ -140,11 +139,9 @@ public class AppointmentEntity {
 		this.aptimeFormetted = timeFormetted;
 	}
 
-
-
 	public AppointmentEntity() {
 		// TODO Auto-generated constructor stub
-		
+
 	}
 
 	@Override

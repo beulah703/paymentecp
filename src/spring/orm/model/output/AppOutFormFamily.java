@@ -1,6 +1,6 @@
 package spring.orm.model.output;
 
-public class AppoutformFamily {
+public class AppOutFormFamily {
 
 	private int fam_patni_id;
 
